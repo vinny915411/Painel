@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Patrimônio</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Patrimônio Mensal</h1>
+        <div id="saldoAtual">R$ 0,00</div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="equityChart"></canvas>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="filters">
+        <button onclick="filtrar('geral')">Geral</button>
+        <button onclick="filtrar('semanal')">Semanal</button>
+        <button onclick="filtrar('mensal')">Mensal</button>
+
+        <button onclick="resetar()" style="border-color:#ff4d4d; color:#ff4d4d;">
+            Reset
+        </button>
+    </div>
+
+    <!-- INPUT -->
+    <div class="form">
+        <input type="number" id="valor" placeholder="Digite o resultado (+ ou -)">
+        <button onclick="adicionarOperacao()">Adicionar</button>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="historico">
+        <h3>Histórico</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Resultado</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+
+            <tbody id="historicoBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
