@@ -5,7 +5,7 @@ let filtroAtual = "geral";
 let ctx;
 
 const GOOGLE_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbz_D0Bg1pfJMR9YMEfriD3-wYO0m2EDSNgE3-P4dDZucJflJ8xN9075RNybpq0KV9qXKg/exec?data=teste&valor=100";
+"https://script.google.com/macros/s/AKfycbz_D0Bg1pfJMR9YMEfriD3-wYO0m2EDSNgE3-P4dDZucJflJ8xN9075RNybpq0KV9qXKg/exec";
 
 /* INIT */
 window.addEventListener("load", () => {
@@ -28,13 +28,10 @@ function resetar(){
 
     atualizarGrafico();
 
-    // RESET GOOGLE SHEETS
-    fetch(GOOGLE_SCRIPT_URL + "?reset=true", {
-        method: "GET"
-    })
-    .then(r => r.text())
-    .then(r => console.log("RESET:", r))
-    .catch(err => console.error(err));
+    fetch(GOOGLE_SCRIPT_URL + "?reset=true")
+        .then(r => r.text())
+        .then(r => console.log("RESET:", r))
+        .catch(err => console.error("ERRO RESET:", err));
 }
 
 /* FILTRO */
@@ -220,7 +217,7 @@ function atualizarTabela(){
     });
 }
 
-/* ADICIONAR OPERAÇÃO + GOOGLE SHEETS */
+/* ADICIONAR OPERAÇÃO */
 function adicionarOperacao(){
 
     const input = document.getElementById("valor");
@@ -243,18 +240,14 @@ function adicionarOperacao(){
 
     input.value = "";
 
-    // 🔥 ENVIAR PARA GOOGLE SHEETS (CORRIGIDO)
-    const url =
-        GOOGLE_SCRIPT_URL +
-        "?data=" + encodeURIComponent(operacao.data) +
-        "&valor=" + encodeURIComponent(operacao.valor);
+    const url = new URL(GOOGLE_SCRIPT_URL);
+    url.searchParams.append("data", operacao.data);
+    url.searchParams.append("valor", operacao.valor);
 
-    fetch(url, {
-        method: "GET"
-    })
-    .then(r => r.text())
-    .then(r => console.log("SHEETS:", r))
-    .catch(err => console.error(err));
+    fetch(url.toString())
+        .then(r => r.text())
+        .then(r => console.log("SHEETS:", r))
+        .catch(err => console.error("ERRO:", err));
 }
 
 /* ENTER */
