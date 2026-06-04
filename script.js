@@ -7,10 +7,50 @@ let ctx;
 const GOOGLE_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbwoOBXFcCbAfy09I7DBpQC2w0ty96j3Hrz62BkkbvamfZy79E1zEWWT0BtZtfnoQrlG/exec";
 
+async function carregarDados() {
+
+    try {
+
+        const response = await fetch(
+            GOOGLE_SCRIPT_URL + "?listar=true"
+        );
+
+        const dados = await response.json();
+
+        operacoes = dados.map(op => ({
+
+            valor: Number(op.valor),
+
+            data: op.data,
+
+            rawDate: new Date().toISOString()
+
+        }));
+
+        atualizarGrafico();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar dados:",
+            erro
+        );
+    }
+}
+
 /* INIT */
 window.addEventListener("load", () => {
+
     ctx = document.getElementById("equityChart");
-    atualizarGrafico();
+
+    carregarDados();
+
+    setInterval(() => {
+
+        carregarDados();
+
+    }, 5000);
+
 });
 
 /* ENVIAR PARA PLANILHA */
@@ -38,9 +78,15 @@ function resetar(){
 
     atualizarGrafico();
 
-    enviarParaPlanilha(
-        GOOGLE_SCRIPT_URL + "?reset=true"
-    );
+   enviarParaPlanilha(
+    GOOGLE_SCRIPT_URL + "?reset=true"
+);
+
+setTimeout(() => {
+
+    carregarDados();
+
+}, 1500);
 }
 
 /* FILTRO */
@@ -267,6 +313,12 @@ function adicionarOperacao(){
     url.searchParams.append("valor", operacao.valor);
 
     enviarParaPlanilha(url.toString());
+
+setTimeout(() => {
+
+    carregarDados();
+
+}, 1500);
 }
 
 /* ENTER */
