@@ -11,22 +11,16 @@ const GOOGLE_SCRIPT_URL =
 
 async function carregarDados() {
 
-    console.time("carregarDados");
-
     try {
 
-        const response = await fetch(
-            GOOGLE_SCRIPT_URL + "?listar=true&t=" + Date.now(),
-            {
-                cache: "no-store"
-            }
-        );
-
-        console.timeLog("carregarDados", "Resposta recebida");
+       const response = await fetch(
+    GOOGLE_SCRIPT_URL + "?listar=true&t=" + Date.now(),
+    {
+        cache: "no-store"
+    }
+);
 
         const dados = await response.json();
-
-        console.timeLog("carregarDados", "JSON convertido");
 
         const novasOperacoes = dados.map(op => {
 
@@ -43,33 +37,6 @@ async function carregarDados() {
             };
 
         });
-
-        const hashAtual = JSON.stringify(novasOperacoes);
-
-        if (hashAtual !== ultimoHash) {
-
-            ultimoHash = hashAtual;
-
-            operacoes = novasOperacoes;
-
-            atualizarGrafico();
-
-            console.log("Dados alterados");
-
-        }
-
-    } catch (erro) {
-
-        console.error(
-            "Erro ao carregar dados:",
-            erro
-        );
-
-    }
-
-    console.timeEnd("carregarDados");
-}
-
 
   const hashAtual = JSON.stringify(novasOperacoes);
         
@@ -142,7 +109,7 @@ function resetar(){
 
         carregarDados();
 
-    }, 255);
+    }, 5000);
 }
 
 /* FILTRO */
