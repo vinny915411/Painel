@@ -341,7 +341,7 @@ setTimeout(() => {
 
     carregarDados();
 
-}, 1000);
+}, 255);
 
 }
 
