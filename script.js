@@ -252,7 +252,6 @@ function adicionarOperacao(){
 
 /* ENTER */
 document.addEventListener("DOMContentLoaded", () => {
-
     const input = document.getElementById("valor");
 
     if(input){
@@ -263,5 +262,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
 });
