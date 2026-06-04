@@ -324,14 +324,7 @@ function adicionarOperacao(){
         rawDate: agora.toISOString()
     };
 
- operacoes.push(operacao);
-
-ultimoHash = JSON.stringify(
-    operacoes.map(op => ({
-        data: op.data,
-        valor: op.valor
-    }))
-);
+operacoes.push(operacao);
 
 atualizarGrafico();
 
@@ -343,6 +336,12 @@ atualizarGrafico();
     url.searchParams.append("valor", operacao.valor);
 
     enviarParaPlanilha(url.toString());
+
+   setTimeout(() => {
+
+    carregarDados();
+
+}, 1500);
 
 }
 
