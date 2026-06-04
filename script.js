@@ -4,6 +4,8 @@ let chart;
 let filtroAtual = "geral";
 let ctx;
 
+let ultimoHash = "";
+
 const GOOGLE_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbwoOBXFcCbAfy09I7DBpQC2w0ty96j3Hrz62BkkbvamfZy79E1zEWWT0BtZtfnoQrlG/exec";
 
