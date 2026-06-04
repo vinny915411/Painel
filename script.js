@@ -70,9 +70,11 @@ window.addEventListener("load", () => {
 
     carregarDados();
 
-    enviarParaPlanilha(
-    GOOGLE_SCRIPT_URL + "?reset=true"
-);
+    setInterval(() => {
+
+        carregarDados();
+
+    }, 5000);
 
 });
 
