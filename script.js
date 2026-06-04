@@ -17,15 +17,21 @@ async function carregarDados() {
 
         const dados = await response.json();
 
-        operacoes = dados.map(op => ({
+       operacoes = dados.map(op => {
 
-            valor: Number(op.valor),
+    const dataObj = new Date(op.data);
 
-            data: op.data,
+    return {
 
-            rawDate: new Date().toISOString()
+        valor: Number(op.valor),
 
-        }));
+        data: dataObj.toLocaleDateString("pt-BR"),
+
+        rawDate: dataObj.toISOString()
+
+    };
+
+});
 
         atualizarGrafico();
 
