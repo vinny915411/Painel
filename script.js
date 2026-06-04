@@ -18,6 +18,22 @@ function salvar(){
     localStorage.setItem("operacoes", JSON.stringify(operacoes));
 }
 
+/* ENVIAR PARA PLANILHA */
+function enviarParaPlanilha(url){
+
+    fetch(url, {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-cache"
+    })
+    .then(() => {
+        console.log("Dados enviados para a planilha.");
+    })
+    .catch(err => {
+        console.error("ERRO AO ENVIAR:", err);
+    });
+}
+
 /* RESET */
 function resetar(){
 
@@ -28,10 +44,9 @@ function resetar(){
 
     atualizarGrafico();
 
-    fetch(GOOGLE_SCRIPT_URL + "?reset=true")
-        .then(r => r.text())
-        .then(r => console.log("RESET:", r))
-        .catch(err => console.error("ERRO RESET:", err));
+    enviarParaPlanilha(
+        GOOGLE_SCRIPT_URL + "?reset=true"
+    );
 }
 
 /* FILTRO */
@@ -241,13 +256,11 @@ function adicionarOperacao(){
     input.value = "";
 
     const url = new URL(GOOGLE_SCRIPT_URL);
+
     url.searchParams.append("data", operacao.data);
     url.searchParams.append("valor", operacao.valor);
 
-    fetch(url.toString())
-        .then(r => r.text())
-        .then(r => console.log("SHEETS:", r))
-        .catch(err => console.error("ERRO:", err));
+    enviarParaPlanilha(url.toString());
 }
 
 /* ENTER */
