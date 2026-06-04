@@ -72,7 +72,7 @@ setInterval(() => {
 
     carregarDados();
 
-}, 200);
+}, 1000);
 
 });
 
@@ -109,7 +109,7 @@ function resetar(){
 
         carregarDados();
 
-    }, 255);
+    }, 1000);
 }
 
 /* FILTRO */
