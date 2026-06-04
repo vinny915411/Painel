@@ -3,32 +3,30 @@ let chart;
 let filtroAtual = "geral";
 let ctx;
 
-// COLE O SEU NOVO LINK DO APPS SCRIPT AQUI DENTRO DAS ASPAS:
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_D0Bg1pfJMR9YMEfriD3-wYO0m2EDSNgE3-P4dDZucJflJ8xN9075RNybpq0KV9qXKg/exec";
+// Cole o seu novo link gerado no passo anterior aqui dentro das aspas:
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4O3mwOty4RcFL7u-So6HQUZUnKOoWMxd1OLEJX4kMVOU1nFiaSfza2oLL9tQYPlzw/exec";
 
 /* INIT */
 window.addEventListener("load", () => {
     ctx = document.getElementById("equityChart");
     
-    // Carrega os dados imediatamente ao abrir a página
+    // Inicia puxando os dados e atualiza a cada 1 segundo (1000ms)
     carregarDadosDaPlanilha();
-    
-    // Configura o Sincronismo Automático a cada 1 segundo (1000 milissegundos)
     setInterval(carregarDadosDaPlanilha, 1000);
 });
 
-/* BUSCAR DADOS DO GOOGLE SHEETS (SINCRONISMO) */
+/* BUSCAR DADOS DO GOOGLE SHEETS */
 function carregarDadosDaPlanilha() {
     fetch(GOOGLE_SCRIPT_URL)
         .then(response => response.json())
         .then(dadosVindosDaPlanilha => {
-            // Mapeia os dados recebidos para o formato que o gráfico usa
-            // Como a planilha armazena strings, recriamos uma rawDate aproximada para os filtros funcionarem
+            if (!Array.isArray(dadosVindosDaPlanilha)) return;
+
             operacoes = dadosVindosDaPlanilha.map(item => {
-                const partesData = item.data.split('/');
+                const partesData = item.data.toString().split('/');
                 let dataObjeto = new Date();
                 if(partesData.length === 3) {
-                    // Formato PT-BR: DD/MM/AAAA -> Ano, Mês(0-11), Dia
+                    // DD/MM/AAAA -> Ano, Mês(0-11), Dia
                     dataObjeto = new Date(partesData[2], partesData[1] - 1, partesData[0]);
                 }
                 return {
@@ -38,10 +36,35 @@ function carregarDadosDaPlanilha() {
                 };
             });
             
-            // Atualiza a tela com os dados mais recentes da nuvem
             atualizarGrafico();
         })
-        .catch(err => console.error("Erro ao sincronizar dados do Google Sheets:", err));
+        .catch(err => console.error("Erro ao ler dados da planilha:", err));
+}
+
+/* ADICIONAR OPERAÇÃO */
+function adicionarOperacao(){
+    const input = document.getElementById("valor");
+    const valor = Number(input.value);
+
+    if(input.value.trim() === "" || isNaN(valor)) return;
+
+    const agora = new Date();
+    const dataFormatada = agora.toLocaleDateString("pt-BR");
+
+    input.value = "";
+
+    const url = new URL(GOOGLE_SCRIPT_URL);
+    url.searchParams.append("data", dataFormatada);
+    url.searchParams.append("valor", valor);
+
+    // Envia os dados usando mode: "cors" já liberado pelo Apps Script
+    fetch(url.toString(), { method: "GET" })
+        .then(() => {
+            console.log("Enviado com sucesso!");
+            // Atualiza imediatamente após enviar
+            carregarDadosDaPlanilha();
+        })
+        .catch(err => console.error("Erro ao enviar:", err));
 }
 
 /* RESET */
@@ -51,13 +74,12 @@ function resetar(){
     operacoes = [];
     atualizarGrafico();
 
-    fetch(GOOGLE_SCRIPT_URL + "?reset=true")
-        .then(r => r.text())
+    fetch(GOOGLE_SCRIPT_URL + "?reset=true", { method: "GET" })
         .then(() => {
-            console.log("Planilha resetada com sucesso.");
+            console.log("Planilha resetada!");
             carregarDadosDaPlanilha();
         })
-        .catch(err => console.error("ERRO RESET:", err));
+        .catch(err => console.error("Erro ao resetar:", err));
 }
 
 /* FILTRO */
@@ -182,33 +204,6 @@ function atualizarTabela(){
         `;
         body.appendChild(tr);
     });
-}
-
-/* ADICIONAR OPERAÇÃO À PLANILHA */
-function adicionarOperacao(){
-    const input = document.getElementById("valor");
-    const valor = Number(input.value);
-
-    if(input.value.trim() === "" || isNaN(valor)) return;
-
-    const agora = new Date();
-    const dataFormatada = agora.toLocaleDateString("pt-BR");
-
-    input.value = "";
-
-    // Monta o envio para a API da Planilha
-    const url = new URL(GOOGLE_SCRIPT_URL);
-    url.searchParams.append("data", dataFormatada);
-    url.searchParams.append("valor", valor);
-
-    // Envia diretamente para a Planilha do Google
-    fetch(url.toString(), { method: "GET" })
-        .then(() => {
-            console.log("Dado salvo com sucesso na Planilha!");
-            // Força uma leitura rápida logo após inserir para atualizar a tela sem esperar o próximo segundo
-            carregarDadosDaPlanilha();
-        })
-        .catch(err => console.error("Erro ao enviar dados para a planilha:", err));
 }
 
 /* EVENTO DO TECLADO ENTER */
