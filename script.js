@@ -22,21 +22,36 @@ async function carregarDados() {
 
         const dados = await response.json();
 
-        const novasOperacoes = dados.map(op => {
+      const novasOperacoes = dados
 
-            const dataObj = new Date(op.data);
+.filter(op => {
 
-            return {
+    return (
+        op &&
+        op.data &&
+        op.data.toString().trim() !== "" &&
+        op.valor !== "" &&
+        op.valor !== null &&
+        op.valor !== undefined
+    );
 
-                valor: Number(op.valor),
+})
 
-                data: dataObj.toLocaleDateString("pt-BR"),
+.map(op => {
 
-                rawDate: op.data
+    const dataObj = new Date(op.data);
 
-            };
+    return {
 
-        });
+        valor: Number(op.valor),
+
+        data: dataObj.toLocaleDateString("pt-BR"),
+
+        rawDate: op.data
+
+    };
+
+});
 
   const hashAtual = JSON.stringify(novasOperacoes);
         
