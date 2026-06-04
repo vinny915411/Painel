@@ -13,9 +13,12 @@ async function carregarDados() {
 
     try {
 
-        const response = await fetch(
-            GOOGLE_SCRIPT_URL + "?listar=true"
-        );
+       const response = await fetch(
+    GOOGLE_SCRIPT_URL + "?listar=true&t=" + Date.now(),
+    {
+        cache: "no-store"
+    }
+);
 
         const dados = await response.json();
 
@@ -35,13 +38,8 @@ async function carregarDados() {
 
         });
 
-        const hashAtual = JSON.stringify(
-            novasOperacoes.map(op => ({
-                data: op.data,
-                valor: op.valor
-            }))
-        );
-
+  const hashAtual = JSON.stringify(novasOperacoes);
+        
         if (hashAtual !== ultimoHash) {
 
             ultimoHash = hashAtual;
@@ -70,11 +68,11 @@ window.addEventListener("load", () => {
 
     carregarDados();
 
-    setInterval(() => {
+setInterval(() => {
 
-        carregarDados();
+    carregarDados();
 
-    }, 5000);
+}, 3000);
 
 });
 
@@ -103,15 +101,15 @@ function resetar(){
 
     atualizarGrafico();
 
-   enviarParaPlanilha(
-    GOOGLE_SCRIPT_URL + "?reset=true"
-);
+    enviarParaPlanilha(
+        GOOGLE_SCRIPT_URL + "?reset=true"
+    );
 
-setTimeout(() => {
+    setTimeout(() => {
 
-    carregarDados();
+        carregarDados();
 
-}, 1500);
+    }, 5000);
 }
 
 /* FILTRO */
@@ -332,18 +330,18 @@ atualizarGrafico();
 
     input.value = "";
 
-    const url = new URL(GOOGLE_SCRIPT_URL);
+   const url = new URL(GOOGLE_SCRIPT_URL);
 
-    url.searchParams.append("data", operacao.data);
-    url.searchParams.append("valor", operacao.valor);
+url.searchParams.append("data", operacao.data);
+url.searchParams.append("valor", operacao.valor);
 
-    enviarParaPlanilha(url.toString());
+enviarParaPlanilha(url.toString());
 
-   setTimeout(() => {
+setTimeout(() => {
 
     carregarDados();
 
-}, 1500);
+}, 5000);
 
 }
 
