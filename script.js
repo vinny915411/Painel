@@ -13,34 +13,47 @@ async function carregarDados() {
 
     try {
 
-       const response = await fetch(
-    GOOGLE_SCRIPT_URL + "?listar=true&t=" + Date.now(),
-    {
-        cache: "no-store"
-    }
-);
+        const response = await fetch(
+            GOOGLE_SCRIPT_URL + "?listar=true&t=" + Date.now(),
+            {
+                cache: "no-store"
+            }
+        );
 
         const dados = await response.json();
 
-        const novasOperacoes = dados.map(op => {
+        const novasOperacoes = dados
 
-            const dataObj = new Date(op.data);
+            .filter(op =>
+                op.data &&
+                op.data !== "" &&
+                op.valor !== null &&
+                op.valor !== "" &&
+                !isNaN(Number(op.valor))
+            )
 
-            return {
+            .map(op => {
 
-                valor: Number(op.valor),
+                const dataObj = new Date(op.data);
 
-                data: dataObj.toLocaleDateString("pt-BR"),
+                return {
 
-                rawDate: op.data
+                    valor: Number(op.valor),
 
-            };
+                    data: isNaN(dataObj)
+                        ? "Data inválida"
+                        : dataObj.toLocaleDateString("pt-BR"),
 
-        });
+                    rawDate: op.data
 
-  const hashAtual = JSON.stringify(novasOperacoes);
-        
-        if (hashAtual !== ultimoHash) {
+                };
+
+            });
+
+        const hashAtual =
+            JSON.stringify(novasOperacoes);
+
+        if(hashAtual !== ultimoHash){
 
             ultimoHash = hashAtual;
 
@@ -49,7 +62,6 @@ async function carregarDados() {
             atualizarGrafico();
 
             console.log("Dados alterados");
-
         }
 
     } catch (erro) {
@@ -64,15 +76,16 @@ async function carregarDados() {
 /* INIT */
 window.addEventListener("load", () => {
 
-    ctx = document.getElementById("equityChart");
+    ctx =
+        document.getElementById("equityChart");
 
     carregarDados();
 
-setInterval(() => {
+    setInterval(() => {
 
-    carregarDados();
+        carregarDados();
 
-}, 1000);
+    }, 1000);
 
 });
 
@@ -85,19 +98,29 @@ function enviarParaPlanilha(url){
         cache: "no-cache"
     })
     .then(() => {
-        console.log("Dados enviados para a planilha.");
+        console.log(
+            "Dados enviados para a planilha."
+        );
     })
     .catch(err => {
-        console.error("ERRO AO ENVIAR:", err);
+        console.error(
+            "ERRO AO ENVIAR:",
+            err
+        );
     });
 }
 
 /* RESET */
 function resetar(){
 
-    if(!confirm("Tem certeza que deseja resetar tudo?")) return;
+    if(
+        !confirm(
+            "Tem certeza que deseja resetar tudo?"
+        )
+    ) return;
 
     operacoes = [];
+    ultimoHash = "";
 
     atualizarGrafico();
 
@@ -114,7 +137,9 @@ function resetar(){
 
 /* FILTRO */
 function filtrar(tipo){
+
     filtroAtual = tipo;
+
     atualizarGrafico();
 }
 
@@ -122,13 +147,18 @@ function filtrar(tipo){
 function calcularSaldo(){
 
     let saldo = 0;
+
     let dados = [...operacoes];
 
     const agora = new Date();
 
     if(filtroAtual === "semanal"){
+
         const seteDias = new Date();
-        seteDias.setDate(agora.getDate() - 7);
+
+        seteDias.setDate(
+            agora.getDate() - 7
+        );
 
         dados = dados.filter(op =>
             new Date(op.rawDate) >= seteDias
@@ -136,8 +166,12 @@ function calcularSaldo(){
     }
 
     if(filtroAtual === "mensal"){
+
         const trintaDias = new Date();
-        trintaDias.setDate(agora.getDate() - 30);
+
+        trintaDias.setDate(
+            agora.getDate() - 30
+        );
 
         dados = dados.filter(op =>
             new Date(op.rawDate) >= trintaDias
@@ -152,14 +186,18 @@ function calcularSaldo(){
 
         if(filtroAtual === "geral"){
 
-            const d = new Date(op.rawDate);
+            const d =
+                new Date(op.rawDate);
 
             const meses = [
-                "JAN","FEV","MAR","ABR","MAI","JUN",
-                "JUL","AGO","SET","OUT","NOV","DEZ"
+                "JAN","FEV","MAR","ABR",
+                "MAI","JUN","JUL","AGO",
+                "SET","OUT","NOV","DEZ"
             ];
 
-            label = meses[d.getMonth()];
+            label =
+                meses[d.getMonth()] ||
+                op.data;
         }
 
         return {
@@ -169,120 +207,13 @@ function calcularSaldo(){
     });
 }
 
-/* GRÁFICO */
-function atualizarGrafico(){
-
-    if(!ctx) return;
-
-    const dados = calcularSaldo();
-
-    const labels = dados.map(x => x.data);
-    const valores = dados.map(x => x.saldo);
-
-    const saldoAtual =
-        valores.length ? valores[valores.length - 1] : 0;
-
-    const saldoElemento =
-        document.getElementById("saldoAtual");
-
-    if(saldoElemento){
-
-        saldoElemento.innerHTML =
-        saldoAtual.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL"
-        });
-
-        saldoElemento.style.color =
-        saldoAtual >= 0 ? "#00ff88" : "#ff4d4d";
-    }
-
-    if(chart) chart.destroy();
-
-    const gradient =
-        ctx.getContext("2d").createLinearGradient(0,0,0,500);
-
-    if(saldoAtual >= 0){
-        gradient.addColorStop(0,"rgba(0,255,136,0.35)");
-        gradient.addColorStop(1,"rgba(0,255,136,0)");
-    } else {
-        gradient.addColorStop(0,"rgba(255,77,77,0.35)");
-        gradient.addColorStop(1,"rgba(255,77,77,0)");
-    }
-
-    chart = new Chart(ctx, {
-
-        type: "line",
-
-        data: {
-            labels: labels,
-
-            datasets: [
-
-                {
-                    data: valores.map(v => v >= 0 ? v : null),
-                    borderColor: "#00ff88",
-                    backgroundColor: gradient,
-                    fill: true,
-                    tension: 0.35,
-                    pointRadius: 0,
-                    borderWidth: 3
-                },
-
-                {
-                    data: valores.map(v => v < 0 ? v : null),
-                    borderColor: "#ff4d4d",
-                    backgroundColor: gradient,
-                    fill: true,
-                    tension: 0.35,
-                    pointRadius: 0,
-                    borderWidth: 3
-                }
-
-            ]
-        },
-
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-
-            scales: {
-
-                x: {
-                    grid: {
-                        color: "rgba(255,255,255,.05)"
-                    },
-                    ticks: {
-                        color: "#b5b5b5"
-                    }
-                },
-
-                y: {
-                    position: "right",
-                    grid: {
-                        color: "rgba(255,255,255,.08)"
-                    },
-                    ticks: {
-                        color: "#b5b5b5"
-                    }
-                }
-            }
-        }
-    });
-
-    atualizarTabela();
-}
-
 /* TABELA */
 function atualizarTabela(){
 
-    const body = document.getElementById("historicoBody");
+    const body =
+        document.getElementById(
+            "historicoBody"
+        );
 
     if(!body) return;
 
@@ -294,72 +225,142 @@ function atualizarTabela(){
 
         saldo += Number(op.valor);
 
-        const tr = document.createElement("tr");
+        const tr =
+            document.createElement("tr");
 
         tr.innerHTML = `
             <td>${op.data}</td>
-            <td class="${op.valor >= 0 ? "positivo" : "negativo"}">
-                R$ ${Number(op.valor).toFixed(2)}
+
+            <td class="${
+                op.valor >= 0
+                ? "positivo"
+                : "negativo"
+            }">
+
+            ${Number(op.valor)
+                .toLocaleString(
+                    "pt-BR",
+                    {
+                        style: "currency",
+                        currency: "BRL"
+                    }
+                )}
+
             </td>
-            <td>R$ ${saldo.toFixed(2)}</td>
+
+            <td>
+
+            ${saldo.toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            )}
+
+            </td>
         `;
 
         body.appendChild(tr);
+
     });
+
 }
 
 /* ADICIONAR OPERAÇÃO */
 function adicionarOperacao(){
 
-    const input = document.getElementById("valor");
-    const valor = Number(input.value);
+    const input =
+        document.getElementById("valor");
 
-    if(input.value === "" || isNaN(valor)) return;
+    const valor =
+        Number(input.value);
 
-    const agora = new Date();
+    if(
+        input.value === "" ||
+        isNaN(valor)
+    ) return;
+
+    const agora =
+        new Date();
 
     const operacao = {
+
         valor: valor,
-        data: agora.toLocaleDateString("pt-BR"),
-        rawDate: agora.toISOString()
+
+        data:
+            agora.toISOString(),
+
+        rawDate:
+            agora.toISOString()
+
     };
 
-operacoes.push(operacao);
+    operacoes.push(
+        operacao
+    );
 
-atualizarGrafico();
+    atualizarGrafico();
 
     input.value = "";
 
-   const url = new URL(GOOGLE_SCRIPT_URL);
+    const url =
+        new URL(
+            GOOGLE_SCRIPT_URL
+        );
 
-url.searchParams.append("data", operacao.data);
-url.searchParams.append("valor", operacao.valor);
+    url.searchParams.append(
+        "data",
+        operacao.data
+    );
 
-enviarParaPlanilha(url.toString());
+    url.searchParams.append(
+        "valor",
+        operacao.valor
+    );
 
-setTimeout(() => {
+    enviarParaPlanilha(
+        url.toString()
+    );
 
-    carregarDados();
+    setTimeout(() => {
 
-}, 300);
+        carregarDados();
+
+    }, 500);
 
 }
 
 /* ENTER */
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    const input = document.getElementById("valor");
+        const input =
+            document.getElementById(
+                "valor"
+            );
 
-    if(input){
+        if(input){
 
-        input.addEventListener("keydown", (e) => {
+            input.addEventListener(
+                "keydown",
+                (e) => {
 
-            if(e.key === "Enter"){
+                    if(
+                        e.key === "Enter"
+                    ){
 
-                e.preventDefault();
+                        e.preventDefault();
 
-                adicionarOperacao();
-            }
-        });
+                        adicionarOperacao();
+
+                    }
+
+                }
+            );
+
+        }
+
     }
-});
+);
