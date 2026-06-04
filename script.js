@@ -1,139 +1,365 @@
 let operacoes = [];
+
 let chart;
 let filtroAtual = "geral";
 let ctx;
 
-// COLOQUE SEU LINK NOVO AQUI
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_D0Bg1pfJMR9YMEfriD3-wYO0m2EDSNgE3-P4dDZucJflJ8xN9075RNybpq0KV9qXKg/exec";
+let ultimoHash = "";
 
+const GOOGLE_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbwoOBXFcCbAfy09I7DBpQC2w0ty96j3Hrz62BkkbvamfZy79E1zEWWT0BtZtfnoQrlG/exec";
+
+async function carregarDados() {
+
+    try {
+
+       const response = await fetch(
+    GOOGLE_SCRIPT_URL + "?listar=true&t=" + Date.now(),
+    {
+        cache: "no-store"
+    }
+);
+
+        const dados = await response.json();
+
+        const novasOperacoes = dados.map(op => {
+
+            const dataObj = new Date(op.data);
+
+            return {
+
+                valor: Number(op.valor),
+
+                data: dataObj.toLocaleDateString("pt-BR"),
+
+                rawDate: op.data
+
+            };
+
+        });
+
+  const hashAtual = JSON.stringify(novasOperacoes);
+        
+        if (hashAtual !== ultimoHash) {
+
+            ultimoHash = hashAtual;
+
+            operacoes = novasOperacoes;
+
+            atualizarGrafico();
+
+            console.log("Dados alterados");
+
+        }
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar dados:",
+            erro
+        );
+    }
+}
+
+/* INIT */
 window.addEventListener("load", () => {
+
     ctx = document.getElementById("equityChart");
+
     carregarDados();
-    setInterval(carregarDados, 1000); // Sincronismo de 1 segundo
+
+setInterval(() => {
+
+    carregarDados();
+
+}, 3000);
+
 });
 
-function carregarDados() {
-    fetch(GOOGLE_SCRIPT_URL)
-        .then(res => res.json())
-        .then(dados => {
-            operacoes = dados.map(item => {
-                const p = item.data.split('/');
-                const d = p.length === 3 ? new Date(p[2], p[1]-1, p[0]) : new Date();
-                return { valor: Number(item.valor), data: item.data, rawDate: d.toISOString() };
-            });
-            atualizarGrafico();
-        })
-        .catch(e => console.log("Aguardando conexão..."));
+/* ENVIAR PARA PLANILHA */
+function enviarParaPlanilha(url){
+
+    fetch(url, {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-cache"
+    })
+    .then(() => {
+        console.log("Dados enviados para a planilha.");
+    })
+    .catch(err => {
+        console.error("ERRO AO ENVIAR:", err);
+    });
 }
 
-function adicionarOperacao() {
-    const input = document.getElementById("valor");
-    const valor = input.value;
-    if (!valor) return;
+/* RESET */
+function resetar(){
 
-    const data = new Date().toLocaleDateString("pt-BR");
-    input.value = ""; // Limpa na hora
+    if(!confirm("Tem certeza que deseja resetar tudo?")) return;
 
-    // ENVIO "CEGO" (Mais seguro para celular)
-    const url = `${GOOGLE_SCRIPT_URL}?data=${data}&valor=${valor}`;
-    
-    fetch(url, { mode: 'no-cors' })
-        .then(() => {
-            console.log("Enviado!");
-            // Não tentamos ler a resposta aqui para evitar erro de CORS
-            // O setInterval de 1s vai mostrar o dado na tela automaticamente
-        });
+    operacoes = [];
+
+    atualizarGrafico();
+
+    enviarParaPlanilha(
+        GOOGLE_SCRIPT_URL + "?reset=true"
+    );
+
+    setTimeout(() => {
+
+        carregarDados();
+
+    }, 5000);
 }
 
-function resetar() {
-    if (!confirm("Resetar planilha?")) return;
-    fetch(`${GOOGLE_SCRIPT_URL}?reset=true`, { mode: 'no-cors' }).then(() => carregarDados());
+/* FILTRO */
+function filtrar(tipo){
+    filtroAtual = tipo;
+    atualizarGrafico();
 }
 
-function filtrar(t) { filtroAtual = t; atualizarGrafico(); }
+/* CALCULAR SALDO */
+function calcularSaldo(){
 
-function calcularSaldo() {
     let saldo = 0;
     let dados = [...operacoes];
+
     const agora = new Date();
 
-    if (filtroAtual === "semanal") {
-        const sete = new Date(); sete.setDate(agora.getDate() - 7);
-        dados = dados.filter(op => new Date(op.rawDate) >= sete);
-    } else if (filtroAtual === "mensal") {
-        const trinta = new Date(); trinta.setDate(agora.getDate() - 30);
-        dados = dados.filter(op => new Date(op.rawDate) >= trinta);
+    if(filtroAtual === "semanal"){
+        const seteDias = new Date();
+        seteDias.setDate(agora.getDate() - 7);
+
+        dados = dados.filter(op =>
+            new Date(op.rawDate) >= seteDias
+        );
+    }
+
+    if(filtroAtual === "mensal"){
+        const trintaDias = new Date();
+        trintaDias.setDate(agora.getDate() - 30);
+
+        dados = dados.filter(op =>
+            new Date(op.rawDate) >= trintaDias
+        );
     }
 
     return dados.map(op => {
-        saldo += op.valor;
+
+        saldo += Number(op.valor);
+
         let label = op.data;
-        if (filtroAtual === "geral") {
-            const meses = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
-            label = meses[new Date(op.rawDate).getMonth()];
+
+        if(filtroAtual === "geral"){
+
+            const d = new Date(op.rawDate);
+
+            const meses = [
+                "JAN","FEV","MAR","ABR","MAI","JUN",
+                "JUL","AGO","SET","OUT","NOV","DEZ"
+            ];
+
+            label = meses[d.getMonth()];
         }
-        return { data: label, saldo: saldo };
+
+        return {
+            data: label,
+            saldo: saldo
+        };
     });
 }
 
-function atualizarGrafico() {
-    if (!ctx) return;
+/* GRÁFICO */
+function atualizarGrafico(){
+
+    if(!ctx) return;
+
     const dados = calcularSaldo();
+
     const labels = dados.map(x => x.data);
     const valores = dados.map(x => x.saldo);
-    const saldoAtual = valores.length ? valores[valores.length - 1] : 0;
 
-    const el = document.getElementById("saldoAtual");
-    if (el) {
-        el.innerHTML = saldoAtual.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        el.style.color = saldoAtual >= 0 ? "#00ff88" : "#ff4d4d";
+    const saldoAtual =
+        valores.length ? valores[valores.length - 1] : 0;
+
+    const saldoElemento =
+        document.getElementById("saldoAtual");
+
+    if(saldoElemento){
+
+        saldoElemento.innerHTML =
+        saldoAtual.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+        });
+
+        saldoElemento.style.color =
+        saldoAtual >= 0 ? "#00ff88" : "#ff4d4d";
     }
 
-    if (chart) chart.destroy();
-    const grad = ctx.getContext("2d").createLinearGradient(0,0,0,500);
-    grad.addColorStop(0, saldoAtual >= 0 ? "rgba(0,255,136,0.3)" : "rgba(255,77,77,0.3)");
-    grad.addColorStop(1, "transparent");
+    if(chart) chart.destroy();
+
+    const gradient =
+        ctx.getContext("2d").createLinearGradient(0,0,0,500);
+
+    if(saldoAtual >= 0){
+        gradient.addColorStop(0,"rgba(0,255,136,0.35)");
+        gradient.addColorStop(1,"rgba(0,255,136,0)");
+    } else {
+        gradient.addColorStop(0,"rgba(255,77,77,0.35)");
+        gradient.addColorStop(1,"rgba(255,77,77,0)");
+    }
 
     chart = new Chart(ctx, {
+
         type: "line",
+
         data: {
             labels: labels,
-            datasets: [{
-                data: valores,
-                borderColor: saldoAtual >= 0 ? "#00ff88" : "#ff4d4d",
-                backgroundColor: grad,
-                fill: true,
-                tension: 0.3,
-                pointRadius: 0
-            }]
+
+            datasets: [
+
+                {
+                    data: valores.map(v => v >= 0 ? v : null),
+                    borderColor: "#00ff88",
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.35,
+                    pointRadius: 0,
+                    borderWidth: 3
+                },
+
+                {
+                    data: valores.map(v => v < 0 ? v : null),
+                    borderColor: "#ff4d4d",
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.35,
+                    pointRadius: 0,
+                    borderWidth: 3
+                }
+
+            ]
         },
+
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
             scales: {
-                x: { grid: { display: false }, ticks: { color: "#888" } },
-                y: { position: "right", grid: { color: "#222" }, ticks: { color: "#888" } }
+
+                x: {
+                    grid: {
+                        color: "rgba(255,255,255,.05)"
+                    },
+                    ticks: {
+                        color: "#b5b5b5"
+                    }
+                },
+
+                y: {
+                    position: "right",
+                    grid: {
+                        color: "rgba(255,255,255,.08)"
+                    },
+                    ticks: {
+                        color: "#b5b5b5"
+                    }
+                }
             }
         }
     });
+
     atualizarTabela();
 }
 
-function atualizarTabela() {
+/* TABELA */
+function atualizarTabela(){
+
     const body = document.getElementById("historicoBody");
-    if (!body) return;
+
+    if(!body) return;
+
     body.innerHTML = "";
+
     let saldo = 0;
+
     operacoes.forEach(op => {
-        saldo += op.valor;
+
+        saldo += Number(op.valor);
+
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${op.data}</td><td class="${op.valor >= 0 ? 'positivo':'negativo'}">R$ ${op.valor.toFixed(2)}</td><td>R$ ${saldo.toFixed(2)}</td>`;
+
+        tr.innerHTML = `
+            <td>${op.data}</td>
+            <td class="${op.valor >= 0 ? "positivo" : "negativo"}">
+                R$ ${Number(op.valor).toFixed(2)}
+            </td>
+            <td>R$ ${saldo.toFixed(2)}</td>
+        `;
+
         body.appendChild(tr);
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+/* ADICIONAR OPERAÇÃO */
+function adicionarOperacao(){
+
     const input = document.getElementById("valor");
-    if (input) input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); adicionarOperacao(); } });
+    const valor = Number(input.value);
+
+    if(input.value === "" || isNaN(valor)) return;
+
+    const agora = new Date();
+
+    const operacao = {
+        valor: valor,
+        data: agora.toLocaleDateString("pt-BR"),
+        rawDate: agora.toISOString()
+    };
+
+operacoes.push(operacao);
+
+atualizarGrafico();
+
+    input.value = "";
+
+   const url = new URL(GOOGLE_SCRIPT_URL);
+
+url.searchParams.append("data", operacao.data);
+url.searchParams.append("valor", operacao.valor);
+
+enviarParaPlanilha(url.toString());
+
+setTimeout(() => {
+
+    carregarDados();
+
+}, 5000);
+
+}
+
+/* ENTER */
+document.addEventListener("DOMContentLoaded", () => {
+
+    const input = document.getElementById("valor");
+
+    if(input){
+
+        input.addEventListener("keydown", (e) => {
+
+            if(e.key === "Enter"){
+
+                e.preventDefault();
+
+                adicionarOperacao();
+            }
+        });
+    }
 });
