@@ -72,7 +72,7 @@ setInterval(() => {
 
     carregarDados();
 
-}, 3000);
+}, 200);
 
 });
 
