@@ -3,27 +3,31 @@ let chart;
 let filtroAtual = "geral";
 let ctx;
 
-// Cole o seu novo link gerado no passo anterior aqui dentro das aspas:
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx4O3mwOty4RcFL7u-So6HQUZUnKOoWMxd1OLEJX4kMVOU1nFiaSfza2oLL9tQYPlzw/exec";
+// Substitua o link abaixo pelo novo link gerado no seu Apps Script:
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_D0Bg1pfJMR9YMEfriD3-wYO0m2EDSNgE3-P4dDZucJflJ8xN9075RNybpq0KV9qXKg/exec";
 
 /* INIT */
 window.addEventListener("load", () => {
     ctx = document.getElementById("equityChart");
     
-    // Inicia puxando os dados e atualiza a cada 1 segundo (1000ms)
+    // Puxa os dados assim que abre o site
     carregarDadosDaPlanilha();
+    
+    // Fica vigiando a planilha de 1 em 1 segundo. 
+    // Se outro celular enviar algo, este dispositivo atualiza sozinho!
     setInterval(carregarDadosDaPlanilha, 1000);
 });
 
 /* BUSCAR DADOS DO GOOGLE SHEETS */
 function carregarDadosDaPlanilha() {
     fetch(GOOGLE_SCRIPT_URL)
-        .then(response => response.json())
-        .then(dadosVindosDaPlanilha => {
+        .then(response => response.text()) // Lemos como texto puro para burlar o bloqueio do celular
+        .then(texto => {
+            const dadosVindosDaPlanilha = JSON.parse(texto);
             if (!Array.isArray(dadosVindosDaPlanilha)) return;
 
             operacoes = dadosVindosDaPlanilha.map(item => {
-                const partesData = item.data.toString().split('/');
+                const partesData = item.data.split('/');
                 let dataObjeto = new Date();
                 if(partesData.length === 3) {
                     // DD/MM/AAAA -> Ano, Mês(0-11), Dia
@@ -38,7 +42,7 @@ function carregarDadosDaPlanilha() {
             
             atualizarGrafico();
         })
-        .catch(err => console.error("Erro ao ler dados da planilha:", err));
+        .catch(err => console.error("Erro ao sincronizar dados:", err));
 }
 
 /* ADICIONAR OPERAÇÃO */
@@ -51,21 +55,43 @@ function adicionarOperacao(){
     const agora = new Date();
     const dataFormatada = agora.toLocaleDateString("pt-BR");
 
+    // Limpa o campo na hora para o usuário digitar o próximo
     input.value = "";
 
     const url = new URL(GOOGLE_SCRIPT_URL);
     url.searchParams.append("data", dataFormatada);
     url.searchParams.append("valor", valor);
 
-    // Envia os dados usando mode: "cors" já liberado pelo Apps Script
-    fetch(url.toString(), { method: "GET" })
-        .then(() => {
-            console.log("Enviado com sucesso!");
-            // Atualiza imediatamente após enviar
-            carregarDadosDaPlanilha();
+    // Envia para a planilha
+    fetch(url.toString())
+        .then(response => response.text())
+        .then(texto => {
+            console.log("Enviado e atualizado na planilha!");
+            // Quando a planilha responde, nós já processamos os dados novos na hora
+            const dadosVindosDaPlanilha = JSON.parse(texto);
+            if (Array.isArray(dadosVindosDaPlanilha)) {
+                window.processarNovosDados(dadosVindosDaPlanilha);
+            }
         })
         .catch(err => console.error("Erro ao enviar:", err));
 }
+
+/* FUNÇÃO AUXILIAR DE ATUALIZAÇÃO RÁPIDA */
+window.processarNovosDados = function(dadosVindosDaPlanilha) {
+    operacoes = dadosVindosDaPlanilha.map(item => {
+        const partesData = item.data.split('/');
+        let dataObjeto = new Date();
+        if(partesData.length === 3) {
+            dataObjeto = new Date(partesData[2], partesData[1] - 1, partesData[0]);
+        }
+        return {
+            valor: Number(item.valor),
+            data: item.data,
+            rawDate: dataObjeto.toISOString()
+        };
+    });
+    atualizarGrafico();
+};
 
 /* RESET */
 function resetar(){
@@ -74,7 +100,7 @@ function resetar(){
     operacoes = [];
     atualizarGrafico();
 
-    fetch(GOOGLE_SCRIPT_URL + "?reset=true", { method: "GET" })
+    fetch(GOOGLE_SCRIPT_URL + "?reset=true")
         .then(() => {
             console.log("Planilha resetada!");
             carregarDadosDaPlanilha();
