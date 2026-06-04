@@ -19,23 +19,40 @@ async function carregarDados() {
 
         const dados = await response.json();
 
-       operacoes = dados.map(op => {
+        const novasOperacoes = dados.map(op => {
 
-    const dataObj = new Date(op.data);
+            const dataObj = new Date(op.data);
 
-    return {
+            return {
 
-        valor: Number(op.valor),
+                valor: Number(op.valor),
 
-        data: dataObj.toLocaleDateString("pt-BR"),
+                data: dataObj.toLocaleDateString("pt-BR"),
 
-        rawDate: dataObj.toISOString()
+                rawDate: op.data
 
-    };
+            };
 
-});
+        });
 
-        atualizarGrafico();
+        const hashAtual = JSON.stringify(
+            novasOperacoes.map(op => ({
+                data: op.data,
+                valor: op.valor
+            }))
+        );
+
+        if (hashAtual !== ultimoHash) {
+
+            ultimoHash = hashAtual;
+
+            operacoes = novasOperacoes;
+
+            atualizarGrafico();
+
+            console.log("Dados alterados");
+
+        }
 
     } catch (erro) {
 
