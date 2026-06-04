@@ -5,7 +5,7 @@ let filtroAtual = "geral";
 let ctx;
 
 const GOOGLE_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbz_D0Bg1pfJMR9YMEfriD3-wYO0m2EDSNgE3-P4dDZucJflJ8xN9075RNybpq0KV9qXKg/exec";
+"https://script.google.com/macros/s/AKfycbwQLFBUsMDnrLL5iYoE8hbdzO8Gp4F4ultDRHJMZpaamg8aJUOfRVZClFb8OzKD3yxP/exec";
 
 /* INIT */
 window.addEventListener("load", () => {
