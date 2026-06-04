@@ -70,11 +70,9 @@ window.addEventListener("load", () => {
 
     carregarDados();
 
-    setInterval(() => {
-
-        carregarDados();
-
-    }, 5000);
+    enviarParaPlanilha(
+    GOOGLE_SCRIPT_URL + "?reset=true"
+);
 
 });
 
@@ -326,9 +324,16 @@ function adicionarOperacao(){
         rawDate: agora.toISOString()
     };
 
-    operacoes.push(operacao);
+ operacoes.push(operacao);
 
-    atualizarGrafico();
+ultimoHash = JSON.stringify(
+    operacoes.map(op => ({
+        data: op.data,
+        valor: op.valor
+    }))
+);
+
+atualizarGrafico();
 
     input.value = "";
 
@@ -339,11 +344,6 @@ function adicionarOperacao(){
 
     enviarParaPlanilha(url.toString());
 
-setTimeout(() => {
-
-    carregarDados();
-
-}, 1500);
 }
 
 /* ENTER */
