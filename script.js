@@ -4,8 +4,9 @@ let chart;
 let filtroAtual = "geral";
 let ctx;
 
+// IMPORTANTE: Se você gerou uma nova implantação no Google Apps Script, substitua o link abaixo pelo novo!
 const GOOGLE_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbz_D0Bg1pfJMR9YMEfriD3-wYO0m2EDSNgE3-P4dDZucJflJ8xN9075RNybpq0KV9qXKg/exec";
+"https://script.google.com/macros/s/AKfycbwJ1kZTRkxRWzN9fciLK4lXDc0m_WerCoPfL_6oALOZ2q8-32jjKwL28OIbrfXiA-sp/exec";
 
 /* INIT */
 window.addEventListener("load", () => {
@@ -28,9 +29,8 @@ function resetar(){
 
     atualizarGrafico();
 
-    fetch(GOOGLE_SCRIPT_URL + "?reset=true")
-        .then(r => r.text())
-        .then(r => console.log("RESET:", r))
+    fetch(GOOGLE_SCRIPT_URL + "?reset=true", { method: "GET", mode: "no-cors" })
+        .then(() => console.log("RESET enviado para o Google Sheets"))
         .catch(err => console.error("ERRO RESET:", err));
 }
 
@@ -223,7 +223,7 @@ function adicionarOperacao(){
     const input = document.getElementById("valor");
     const valor = Number(input.value);
 
-    if(input.value === "" || isNaN(valor)) return;
+    if(input.value.trim() === "" || isNaN(valor)) return;
 
     const agora = new Date();
 
@@ -244,14 +244,14 @@ function adicionarOperacao(){
     url.searchParams.append("data", operacao.data);
     url.searchParams.append("valor", operacao.valor);
 
-    fetch(url.toString())
-        .then(r => r.text())
-        .then(r => console.log("SHEETS:", r))
-        .catch(err => console.error("ERRO:", err));
+    fetch(url.toString(), { method: "GET", mode: "no-cors" })
+        .then(() => console.log("Sincronizado com o Google Sheets!"))
+        .catch(err => console.error("ERRO DE CONEXÃO:", err));
 }
 
 /* ENTER */
 document.addEventListener("DOMContentLoaded", () => {
+
     const input = document.getElementById("valor");
 
     if(input){
