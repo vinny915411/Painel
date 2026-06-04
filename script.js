@@ -1,4 +1,4 @@
-let operacoes = JSON.parse(localStorage.getItem("operacoes")) || [];
+let operacoes = [];
 
 let chart;
 let filtroAtual = "geral";
@@ -12,11 +12,6 @@ window.addEventListener("load", () => {
     ctx = document.getElementById("equityChart");
     atualizarGrafico();
 });
-
-/* SALVAR LOCAL */
-function salvar(){
-    localStorage.setItem("operacoes", JSON.stringify(operacoes));
-}
 
 /* ENVIAR PARA PLANILHA */
 function enviarParaPlanilha(url){
@@ -40,7 +35,6 @@ function resetar(){
     if(!confirm("Tem certeza que deseja resetar tudo?")) return;
 
     operacoes = [];
-    localStorage.removeItem("operacoes");
 
     atualizarGrafico();
 
@@ -88,6 +82,7 @@ function calcularSaldo(){
         let label = op.data;
 
         if(filtroAtual === "geral"){
+
             const d = new Date(op.rawDate);
 
             const meses = [
@@ -122,6 +117,7 @@ function atualizarGrafico(){
         document.getElementById("saldoAtual");
 
     if(saldoElemento){
+
         saldoElemento.innerHTML =
         saldoAtual.toLocaleString("pt-BR", {
             style: "currency",
@@ -182,19 +178,30 @@ function atualizarGrafico(){
             maintainAspectRatio: false,
 
             plugins: {
-                legend: { display: false }
+                legend: {
+                    display: false
+                }
             },
 
             scales: {
+
                 x: {
-                    grid: { color: "rgba(255,255,255,.05)" },
-                    ticks: { color: "#b5b5b5" }
+                    grid: {
+                        color: "rgba(255,255,255,.05)"
+                    },
+                    ticks: {
+                        color: "#b5b5b5"
+                    }
                 },
 
                 y: {
                     position: "right",
-                    grid: { color: "rgba(255,255,255,.08)" },
-                    ticks: { color: "#b5b5b5" }
+                    grid: {
+                        color: "rgba(255,255,255,.08)"
+                    },
+                    ticks: {
+                        color: "#b5b5b5"
+                    }
                 }
             }
         }
@@ -250,7 +257,6 @@ function adicionarOperacao(){
 
     operacoes.push(operacao);
 
-    salvar();
     atualizarGrafico();
 
     input.value = "";
@@ -269,12 +275,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("valor");
 
     if(input){
+
         input.addEventListener("keydown", (e) => {
+
             if(e.key === "Enter"){
+
                 e.preventDefault();
+
                 adicionarOperacao();
             }
         });
     }
-
 });
