@@ -8,15 +8,200 @@
 body {
     background: #0b0f14;
     color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+.hidden {
+    display: none !important;
+}
+
+/* TELA DE LOGIN RESTREITO */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 20px;
+    background: radial-gradient(circle at center, #111823 0%, #0b0f14 100%);
+}
+
+.login-box {
+    background: #111823;
+    padding: 40px 30px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    border: 1px solid #1f2a3a;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    font-size: 26px;
+    color: #00ff88;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: #8892b0;
+    font-size: 14px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #b5b5b5;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #1f2a3a;
+    background: #0b0f14;
+    color: #fff;
+    outline: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #00ff88;
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background: #00ff88;
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.biometric-divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.biometric-divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: #1f2a3a;
+    z-index: 1;
+}
+
+.biometric-divider span {
+    background: #111823;
+    padding: 0 15px;
+    color: #8892b0;
+    font-size: 13px;
+    position: relative;
+    z-index: 2;
+}
+
+/* CONTAINER DA ASSINATURA / BIOMETRIA ATUALIZADO */
+.dev-signature-box {
+    width: 100%;
+    padding: 12px;
+    background: transparent !important; /* Sem fundo padrão no PC */
+    border: none !important;             /* Sem nenhuma borda no PC */
+    color: #8892b0;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.3s ease;
+    cursor: default;                     /* Seta de mouse normal no PC */
+    user-select: none;
+}
+
+/* Efeito Hover Neon no PC */
+.dev-signature-box:hover {
+    color: #00ff88;
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+}
+
+/* Alternância de textos entre Computador e Celular */
+.dev-signature-box .text-mobile {
+    display: none; /* Esconde a palavra biometria no PC */
+}
+
+.dev-signature-box .text-pc {
+    display: inline; /* Exibe Nexus System no PC */
+    font-size: 16px;
+}
+
+.login-alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+    background: rgba(255, 77, 77, 0.1);
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
+}
+
+/* ÁREA DO USUÁRIO LOGADO */
+.user-badge {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #111823;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    border: 1px solid #1f2a3a;
+    margin-bottom: 10px;
+}
+
+.btn-logout {
+    background: transparent;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* PAINEL (CONTEÚDO DO CONTAINER ORIGINAL) */
 .container {
     max-width: 1100px;
     margin: 0 auto;
     padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-/* HEADER CENTRALIZADO */
 .header {
     display: flex;
     flex-direction: column;
@@ -32,14 +217,12 @@ body {
     margin-bottom: 8px;
 }
 
-/* SALDO */
 #saldoAtual {
     font-size: 28px;
     font-weight: bold;
     color: #00ff88;
 }
 
-/* CHART */
 .chart-container {
     background: #111823;
     border-radius: 12px;
@@ -49,7 +232,6 @@ body {
     box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
 
-/* FILTERS CENTRALIZADO VERDE */
 .filters {
     display: flex;
     justify-content: center;
@@ -71,18 +253,11 @@ body {
     font-weight: bold;
 }
 
-.filters button:hover {
+.filters button:hover, .filters button.ativo {
     background: #00ff88;
     color: #000;
 }
 
-/* BOTÃO ATIVO (futuro uso) */
-.filters button.ativo {
-    background: #00ff88;
-    color: #000;
-}
-
-/* FORM */
 .form {
     display: flex;
     gap: 10px;
@@ -117,7 +292,6 @@ body {
     opacity: 0.85;
 }
 
-/* TABELA */
 .historico {
     background: #111823;
     padding: 15px;
@@ -149,7 +323,6 @@ tbody tr:hover {
     background: rgba(255,255,255,0.03);
 }
 
-/* CORES */
 .positivo {
     color: #00ff88;
     font-weight: bold;
@@ -162,22 +335,47 @@ tbody tr:hover {
 
 /* RESPONSIVO */
 @media (max-width: 768px) {
-
     .header {
-        flex-direction: column;
         align-items: center;
         gap: 10px;
     }
-
     .form {
         flex-direction: column;
     }
-
     .filters {
         flex-wrap: wrap;
     }
-
     .chart-container {
         height: 300px;
+    }
+    .user-badge {
+        align-self: center;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* COMPORTAMENTO EXCLUSIVO DA BIOMETRIA EM SMARTPHONES */
+    .dev-signature-box {
+        border: 1px solid #1f2a3a !important; /* Cria a borda do botão no celular */
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.02) !important; /* Fundo sutil */
+        cursor: pointer; /* Cursor de clique liberado no celular */
+    }
+    
+    .dev-signature-box:hover {
+        border-color: #00ff88 !important;
+    }
+
+    .dev-signature-box .text-pc {
+        display: none; /* Esconde "Nexus System" no celular */
+    }
+
+    .dev-signature-box .text-mobile {
+        display: inline; /* Mostra "Acessar via Biometria" no celular */
+        color: #fff;
+    }
+    
+    .dev-signature-box:hover .text-mobile {
+        color: #00ff88;
     }
 }
