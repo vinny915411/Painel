@@ -31,18 +31,31 @@
             </div>
 
             <button onclick="realizarLogin()" class="btn-login">Entrar</button>
-            
-  <div class="biometric-divider">
+           <div class="biometric-divider">
                 <span>desenvolvido por</span>
             </div>
 
-            <!-- Botão Biométrico com a Imagem Transparente -->
-            <div onclick="autenticarBiometria()" id="btnBiometria" class="dev-app-biometric">
-                <!-- Puxando a foto salva sem fundo -->
-                <img src="digital.png" alt="Acesso Biométrico" class="app-fingerprint-img">
+            <!-- CONTAINER ADAPTATIVO (PC vs CELULAR) -->
+            <div onclick="autenticarBiometria()" id="btnBiometria" class="auth-footer-container">
+                
+                <!-- VERSÃO PC: Ícone do Planeta + Nome (Esconde no Celular) -->
+                <div class="view-pc">
+                    <svg class="planet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+                        <path d="M2 12h20"/>
+                    </svg>
+                    <span>Nexus System</span>
+                </div>
 
-                <span class="app-biometric-text">Acesso Biométrico</span>
-            </div>
+                <!-- VERSÃO CELULAR: Ícone da Digital + Acesso Biométrico (Esconde no PC) -->
+                <div class="view-mobile">
+                    <img src="digital.png" alt="Acesso Biométrico" class="app-fingerprint-img">
+                    <span class="app-biometric-text">Acesso Biométrico</span>
+                </div>
+
+            </div> 
+  
         </div>
     </div>
 </div>
