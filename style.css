@@ -125,48 +125,52 @@ body {
     z-index: 2;
 }
 
-/* CONTAINER DA ASSINATURA / BIOMETRIA */
-.dev-signature-box {
-    width: 100%;
-    padding: 12px;
-    background: transparent !important; /* Sem fundo no PC */
-    border: none !important;             /* Sem borda no PC */
-    color: #8892b0;
-    font-weight: bold;
+/* NOVO BOTÃO FORMATO APP CENTRALIZADO */
+.dev-app-biometric {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    transition: 0.3s ease;
-    cursor: default;                     /* Seta de mouse normal no PC */
+    gap: 12px;
+    margin: 20px auto 0 auto;
+    width: fit-content;
+    background: transparent !important; /* Fundo transparente na cor do site */
+    cursor: pointer;
     user-select: none;
-}
-
-/* Cor inicial cinza para o ícone circular */
-.dev-signature-box .fingerprint-icon {
-    color: #8892b0;
     transition: 0.3s ease;
 }
 
-/* Efeito Hover Neon no PC (Aplica no ícone e no texto juntos) */
-.dev-signature-box:hover {
+/* Estilo do Ícone (Tamanho normal de App) */
+.dev-app-biometric .app-fingerprint-icon {
+    width: 64px;  /* Tamanho ideal de ícone central */
+    height: 64px;
+    color: #00ff88; /* Inicia direto na cor verde do planeta */
+    border-radius: 50%;
+    padding: 4px;
+    transition: 0.3s ease;
+}
+
+/* Texto Pequeno e Centralizado na Mesma Cor */
+.dev-app-biometric .app-biometric-text {
     color: #00ff88;
-    text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: 0.3s ease;
 }
 
-.dev-signature-box:hover .fingerprint-icon {
-    color: #00ff88;
-    filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
+/* Efeito Hover/Clique - Fundo ganha cor de destaque sutil e brilho neon */
+.dev-app-biometric:hover .app-fingerprint-icon,
+.dev-app-biometric:active .app-fingerprint-icon {
+    background: rgba(0, 255, 136, 0.1) !important; /* Cor de fundo no clique/hover */
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+    transform: scale(1.05);
 }
 
-/* Gerenciamento de texto padrão (Modo PC) */
-.dev-signature-box .text-mobile {
-    display: none; /* Esconde o texto do celular no PC */
-}
-
-.dev-signature-box .text-pc {
-    display: inline-block;
-    font-size: 16px;
+.dev-app-biometric:hover .app-biometric-text,
+.dev-app-biometric:active .app-biometric-text {
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
 }
 
 .login-alert {
@@ -343,7 +347,7 @@ tbody tr:hover {
     font-weight: bold;
 }
 
-/* RESPONSIVO (MOBILE) */
+/* RESPONSIVO */
 @media (max-width: 768px) {
     .header {
         align-items: center;
@@ -362,40 +366,5 @@ tbody tr:hover {
         align-self: center;
         width: 100%;
         justify-content: space-between;
-    }
-
-    /* ESTILO DO BOTÃO DE BIOMETRIA NO CELULAR */
-    .dev-signature-box {
-        border: 1px solid #1f2a3a !important; /* Borda do botão de volta no celular */
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.02) !important; /* Fundo sutil */
-        cursor: pointer;
-    }
-    
-    /* Efeito ao Clicar / Tocar no Celular */
-    .dev-signature-box:hover,
-    .dev-signature-box:active {
-        border-color: #00ff88 !important;
-        color: #00ff88 !important;
-        text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
-    }
-
-    /* Garante que o ícone mude de cor no toque mobile */
-    .dev-signature-box:hover .fingerprint-icon,
-    .dev-signature-box:active .fingerprint-icon {
-        color: #00ff88 !important;
-        filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
-    }
-
-    /* Alternância de textos no Mobile */
-    .dev-signature-box .text-pc {
-        display: none; /* Esconde "Nexus System" */
-    }
-
-    .dev-signature-box .text-mobile {
-        display: inline-block; /* Exibe "acesso biométrico" */
-        font-size: 13px;
-        font-weight: 500;
-        text-transform: lowercase;
     }
 }
