@@ -32,22 +32,26 @@
 
             <button onclick="realizarLogin()" class="btn-login">Entrar</button>
             
-      <div class="biometric-divider">
+     <div class="biometric-divider">
                 <span>desenvolvido por</span>
             </div>
 
-            <!-- Assinatura Adaptativa com Ícone de Digital Circular -->
-            <div onclick="autenticarBiometria()" id="btnBiometria" class="dev-signature-box">
-                <!-- Ícone da Digital com Círculo (idêntico à imagem) -->
-                <svg class="fingerprint-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Botão Biométrico em formato de App Centralizado -->
+            <div onclick="autenticarBiometria()" id="btnBiometria" class="dev-app-biometric">
+                <!-- Ícone da Digital Circular da Imagem -->
+                <svg class="app-fingerprint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 15a3 3 0 0 0 3-3c0-1.66-1.34-3-3-3s-3 1.34-3 3"/>
-                    <path d="M12 18a6 6 0 0 0 6-6c0-3.31-2.69-6-6-6s-6 2.69-6 6v1"/>
-                    <path d="M12 9a3 3 0 0 1 3 3v2"/>
+                    <path d="M12 11c0-1.66-1.34-3-3-3s-3 1.34-3 3v2"/>
+                    <path d="M12 11c1.66 0 3 1.34 3 3v1"/>
+                    <path d="M16 11c0-2.21-1.79-4-4-4s-4 1.79-4 4v4"/>
+                    <path d="M8 11c0-1.1.9-2 2-2s2 .9 2 2v4"/>
+                    <path d="M12 14v3"/>
+                    <path d="M10 15v1"/>
+                    <path d="M14 15v1"/>
                 </svg>
 
-                <span class="text-pc">Nexus System</span>
-                <span class="text-mobile">acesso biométrico</span>
+                <!-- Texto Pequeno Centralizado Abaixo -->
+                <span class="app-biometric-text">Acesso Biométrico</span>
             </div>
         </div>
     </div>
