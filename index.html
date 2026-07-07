@@ -32,23 +32,21 @@
 
             <button onclick="realizarLogin()" class="btn-login">Entrar</button>
             
-           <div class="biometric-divider">
+      <div class="biometric-divider">
                 <span>desenvolvido por</span>
             </div>
 
-            <!-- Assinatura Adaptativa (Planeta no PC / Digital no Celular) -->
+            <!-- Assinatura Adaptativa com Ícone de Digital Circular -->
             <div onclick="autenticarBiometria()" id="btnBiometria" class="dev-signature-box">
-                <!-- Ícone do Planeta (Apenas PC) -->
-                <svg class="icon-pc" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                </svg>
-                
-                <!-- Ícone da Digital (Apenas Celular) -->
-                <svg class="icon-mobile" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 16c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm0-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm4 8c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zm0-6c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zm-8 4c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1zM12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+                <!-- Ícone da Digital com Círculo (idêntico à imagem) -->
+                <svg class="fingerprint-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 15a3 3 0 0 0 3-3c0-1.66-1.34-3-3-3s-3 1.34-3 3"/>
+                    <path d="M12 18a6 6 0 0 0 6-6c0-3.31-2.69-6-6-6s-6 2.69-6 6v1"/>
+                    <path d="M12 9a3 3 0 0 1 3 3v2"/>
                 </svg>
 
-                <span class="text-pc dev-text">Nexus System</span>
+                <span class="text-pc">Nexus System</span>
                 <span class="text-mobile">acesso biométrico</span>
             </div>
         </div>
