@@ -182,9 +182,9 @@ body {
     /* Trava o tamanho máximo da imagem para não explodir */
     .view-mobile .app-fingerprint-img {
         width: 85px !important;
-        height: 80px !important;
-        max-width: 28px;
-        max-height: 28px;
+        height: 85px !important;
+        max-width: 85px;
+        max-height: 85px;
         object-fit: contain;
         background: transparent;
         /* Filtro que força as linhas a ficarem na mesma cor exata do texto */
