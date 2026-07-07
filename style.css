@@ -214,9 +214,10 @@ body {
     margin-bottom: 20px;
     font-size: 14px;
     text-align: center;
-    background: rgba(255, 77, 77, 0.1);
-    border: 1px solid #ff4d4d;
-    color: #ff4d4d;
+    background: rgba(255, 77, 77, 0.15) !important;
+    border: 1px solid #ff4d4d !important;
+    color: #ff4d4d !important;
+    display: block; /* Garante que quando perder o 'hidden' ele apareça correto */
 }
 
 /* ÁREA DO USUÁRIO LOGADO */
