@@ -32,37 +32,14 @@
 
             <button onclick="realizarLogin()" class="btn-login">Entrar</button>
             
-   <div class="biometric-divider">
+  <div class="biometric-divider">
                 <span>desenvolvido por</span>
             </div>
 
-            <!-- Botão Biométrico Corrigido (Cópia Exata da Imagem) -->
+            <!-- Botão Biométrico com a Imagem Transparente -->
             <div onclick="autenticarBiometria()" id="btnBiometria" class="dev-app-biometric">
-                <!-- SVG Fiel à Imagem com Múltiplas Linhas de Digital -->
-                <svg class="app-fingerprint-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round">
-                    <!-- Círculo externo perfeito -->
-                    <circle cx="50" cy="50" r="44" stroke-width="3.5" />
-                    
-                    <!-- Linha central (o núcleo) -->
-                    <path d="M50,45 v20A5,5 0 0,1 40,65" />
-                    
-                    <!-- Primeira camada de curvas em volta do núcleo -->
-                    <path d="M44,40 a9,9 0 0,1 12,0 v25" />
-                    <path d="M38,45 v15 a15,15 0 0,0 6,12" />
-                    
-                    <!-- Segunda camada de curvas intermediárias -->
-                    <path d="M37,36 a17,17 0 0,1 26,0 v24" />
-                    <path d="M31,52 v-4 a22,22 0 0,1 38,0 v12" />
-                    
-                    <!-- Terceira camada de curvas externas (idêntico à foto) -->
-                    <path d="M32,30 a25,25 0 0,1 36,0" />
-                    <path d="M26,58 v-4 a30,30 0 0,1 8,-21" />
-                    <path d="M66,33 a30,30 0 0,1 8,21 v4" />
-                    
-                    <!-- Pequenas linhas da base inferior -->
-                    <path d="M34,68 a18,18 0 0,0 8,6" />
-                    <path d="M58,74 a18,18 0 0,0 8,-6" />
-                </svg>
+                <!-- Puxando a foto salva sem fundo -->
+                <img src="digital.png" alt="Acesso Biométrico" class="app-fingerprint-img">
 
                 <span class="app-biometric-text">Acesso Biométrico</span>
             </div>
