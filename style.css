@@ -140,23 +140,23 @@ body {
     transition: 0.2s ease;
 }
 
-/* Estilo da Imagem sem Fundo em Tamanho Compacto */
+/* Estilo da Imagem Corrigido para Verde-Neon (#00ff89) */
 .dev-app-biometric .app-fingerprint-img {
-    width:35px;               /* Tamanho pequeno e discreto para o rodapé */
-    height: 35px;
+    width: 40px;               /* Tamanho compacto para o rodapé */
+    height: 40px;
     object-fit: contain;
     background: transparent;
     
-    /* Filtro calibrado: Transforma o preto em branco e depois no verde-neon exato (#00ff88) */
-    filter: brightness(0) invert(1) sepia(1) hue-rotate(90deg) saturate(20) brightness(1);
+    /* Filtro milimétrico para atingir a cor exata #00ff89 a partir do preto */
+    filter: invert(61%) sepia(85%) saturate(1472%) hue-rotate(101deg) brightness(105%) contrast(107%);
     transition: 0.2s ease;
 }
 
 /* Efeito Hover/Clique na Imagem */
 .dev-app-biometric:hover .app-fingerprint-img,
 .dev-app-biometric:active .app-fingerprint-img {
-    /* Mantém a cor idêntica e adiciona o brilho de fundo */
-    filter: brightness(0) invert(1) sepia(1) hue-rotate(90deg) saturate(20) brightness(1) drop-shadow(0 0 6px rgba(0, 255, 136, 0.8));
+    /* Mantém o mesmo verde do sistema com efeito de brilho suave ao interagir */
+    filter: invert(61%) sepia(85%) saturate(1472%) hue-rotate(101deg) brightness(105%) contrast(107%) drop-shadow(0 0 6px rgba(0, 255, 137, 0.8));
     transform: scale(1.05);
 }
 
