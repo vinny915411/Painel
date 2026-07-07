@@ -141,12 +141,24 @@ body {
 }
 
 /* Ícone em Tamanho Compacto e Linhas Delicadas */
-.dev-app-biometric .app-fingerprint-icon {
-    width: 35px;               /* Tamanho pequeno e discreto para o rodapé */
-    height: 35px;
-    color: #00ff88;            /* Cor padrão verde-neon */
-    border-radius: 50%;
+/* Estilo da Imagem sem Fundo em Tamanho Compacto */
+.dev-app-biometric .app-fingerprint-img {
+    width: 26px;               /* Tamanho pequeno e discreto para o rodapé */
+    height: 26px;
+    object-fit: contain;
+    background: transparent;
+    
+    /* Filtro preciso: Transforma o traço preto em Verde Neon (#00ff88) */
+    filter: invert(74%) sepia(55%) saturate(1450%) hue-rotate(97deg) brightness(107%) contrast(106%);
     transition: 0.2s ease;
+}
+
+/* Efeito Hover/Clique na Imagem */
+.dev-app-biometric:hover .app-fingerprint-img,
+.dev-app-biometric:active .app-fingerprint-img {
+    /* Mantém o verde e adiciona o efeito de brilho neon expandido */
+    filter: invert(74%) sepia(55%) saturate(1450%) hue-rotate(97deg) brightness(107%) contrast(106%) drop-shadow(0 0 6px rgba(0, 255, 136, 0.8));
+    transform: scale(1.05);
 }
 
 /* Texto Pequeno e Sutil */
