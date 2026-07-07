@@ -142,8 +142,8 @@ body {
 
 /* Estilo da Imagem sem Fundo em Tamanho Compacto */
 .dev-app-biometric .app-fingerprint-img {
-    width: 20px;               /* Tamanho pequeno e discreto para o rodapé */
-    height: 20px;
+    width: 28px;               /* Tamanho pequeno e discreto para o rodapé */
+    height: 28px;
     object-fit: contain;
     background: transparent;
     
