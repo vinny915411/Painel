@@ -149,13 +149,18 @@ body {
     text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
 }
 
-/* Alternância de textos entre Computador e Celular */
+/* Alternância de visibilidade padrão (Modo PC) */
+.dev-signature-box .icon-mobile,
 .dev-signature-box .text-mobile {
-    display: none; /* Esconde a palavra biometria no PC */
+    display: none; /* Oculta a digital e o texto do celular no desktop */
+}
+
+.dev-signature-box .icon-pc,
+.dev-signature-box .text-pc {
+    display: inline-block; /* Mantém o planeta e o Nexus System visíveis */
 }
 
 .dev-signature-box .text-pc {
-    display: inline; /* Exibe Nexus System no PC */
     font-size: 16px;
 }
 
@@ -360,22 +365,31 @@ tbody tr:hover {
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.02) !important; /* Fundo sutil */
         cursor: pointer; /* Cursor de clique liberado no celular */
+        color: #8892b0;
     }
     
-    .dev-signature-box:hover {
+    /* Hover e Toque Dinâmico com Brilho Verde-Neon no Celular */
+    .dev-signature-box:hover,
+    .dev-signature-box:active {
         border-color: #00ff88 !important;
+        color: #00ff88 !important;
+        text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
     }
 
+    /* Inversão dos elementos no Mobile */
+    .dev-signature-box .icon-pc,
     .dev-signature-box .text-pc {
-        display: none; /* Esconde "Nexus System" no celular */
+        display: none; /* Esconde o planeta e o "Nexus System" */
+    }
+
+    .dev-signature-box .icon-mobile,
+    .dev-signature-box .text-mobile {
+        display: inline-block; /* Exibe a digital e o texto sutil */
     }
 
     .dev-signature-box .text-mobile {
-        display: inline; /* Mostra "Acessar via Biometria" no celular */
-        color: #fff;
-    }
-    
-    .dev-signature-box:hover .text-mobile {
-        color: #00ff88;
+        font-size: 13px; /* Tamanho menor para "acesso biométrico" */
+        font-weight: 500;
+        text-transform: lowercase; /* Força letras minúsculas conforme pedido */
     }
 }
