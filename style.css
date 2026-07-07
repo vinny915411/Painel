@@ -181,8 +181,8 @@ body {
 
     /* Trava o tamanho máximo da imagem para não explodir */
     .view-mobile .app-fingerprint-img {
-        width: 28px !important;
-        height: 28px !important;
+        width: 85px !important;
+        height: 80px !important;
         max-width: 28px;
         max-height: 28px;
         object-fit: contain;
