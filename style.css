@@ -142,8 +142,8 @@ body {
 
 /* Ícone em Tamanho Compacto e Linhas Delicadas */
 .dev-app-biometric .app-fingerprint-icon {
-    width: 26px;               /* Tamanho pequeno e discreto para o rodapé */
-    height: 26px;
+    width: 35px;               /* Tamanho pequeno e discreto para o rodapé */
+    height: 35px;
     color: #00ff88;            /* Cor padrão verde-neon */
     border-radius: 50%;
     transition: 0.2s ease;
