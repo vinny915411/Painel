@@ -3,17 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Patrimônio</title>
-
+    <title>Painel de Patrimônio - Restrito</title>
     <link rel="stylesheet" href="style.css">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<div class="container">
+<!-- TELA DE LOGIN PROFISSIONAL -->
+<div id="loginScreen" class="login-container">
+    <div class="login-box">
+        <div class="login-header">
+            <h2>Área Restrita</h2>
+            <p>Faça login para acessar o painel financeiro</p>
+        </div>
+        
+        <div id="loginAlert" class="login-alert hidden"></div>
+
+        <div class="login-form">
+            <div class="input-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" placeholder="Digite seu usuário">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" placeholder="Digite sua senha">
+            </div>
+
+            <button onclick="realizarLogin()" class="btn-login">Entrar</button>
+            
+            <div class="biometric-divider">
+                <span>desenvolvido por</span>
+            </div>
+
+            <!-- Assinatura Inteligente (Vira biometria apenas se for celular) -->
+            <div onclick="autenticarBiometria()" id="btnBiometria" class="dev-signature-box">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                </svg>
+                <span class="text-pc dev-text">Nexus System</span>
+                <span class="text-mobile">Acessar via Biometria</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTEÚDO PRINCIPAL (BLOQUEADO POR PADRÃO) -->
+<div id="mainContent" class="container hidden">
 
     <div class="header">
+        <div class="user-badge">
+            <span id="nomeUsuarioLogado"></span>
+            <button onclick="logout()" class="btn-logout">Sair</button>
+        </div>
         <h1>Patrimônio Mensal</h1>
         <div id="saldoAtual">R$ 0,00</div>
     </div>
@@ -51,7 +93,6 @@
                     <th>Saldo</th>
                 </tr>
             </thead>
-
             <tbody id="historicoBody"></tbody>
         </table>
     </div>
@@ -59,6 +100,5 @@
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
