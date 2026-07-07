@@ -142,8 +142,8 @@ body {
 
 /* Estilo da Imagem Corrigido para Verde-Neon (#00ff89) */
 .dev-app-biometric .app-fingerprint-img {
-    width: 150px;               /* Tamanho compacto para o rodapé */
-    height: 150px;
+    width: 130px;               /* Tamanho compacto para o rodapé */
+    height: 130px;
     object-fit: contain;
     background: transparent;
     
