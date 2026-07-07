@@ -22,12 +22,14 @@
         <div class="login-form">
             <div class="input-group">
                 <label for="username">Usuário</label>
-                <input type="text" id="username" placeholder="Digite seu usuário">
+                <!-- Modificado: Adicionado autocomplete="username" -->
+                <input type="text" id="username" placeholder="Digite seu usuário" autocomplete="username">
             </div>
             
             <div class="input-group">
                 <label for="password">Senha</label>
-                <input type="password" id="password" placeholder="Digite sua senha">
+                <!-- Modificado: Adicionado autocomplete="new-password" -->
+                <input type="password" id="password" placeholder="Digite sua senha" autocomplete="new-password">
             </div>
 
             <button onclick="realizarLogin()" class="btn-login">Entrar</button>
