@@ -17,7 +17,7 @@ body {
     display: none !important;
 }
 
-/* TELA DE LOGIN RESTREITO */
+/* TELA DE LOGIN RESTRITO */
 .login-container {
     display: flex;
     justify-content: center;
@@ -125,15 +125,14 @@ body {
     z-index: 2;
 }
 
-/* CONTAINER DA ASSINATURA / BIOMETRIA ATUALIZADO */
+/* CONTAINER DA ASSINATURA / BIOMETRIA */
 .dev-signature-box {
     width: 100%;
     padding: 12px;
-    background: transparent !important; /* Sem fundo padrão no PC */
-    border: none !important;             /* Sem nenhuma borda no PC */
+    background: transparent !important; /* Sem fundo no PC */
+    border: none !important;             /* Sem borda no PC */
     color: #8892b0;
     font-weight: bold;
-    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -143,24 +142,30 @@ body {
     user-select: none;
 }
 
-/* Efeito Hover Neon no PC */
+/* Cor inicial cinza para o ícone circular */
+.dev-signature-box .fingerprint-icon {
+    color: #8892b0;
+    transition: 0.3s ease;
+}
+
+/* Efeito Hover Neon no PC (Aplica no ícone e no texto juntos) */
 .dev-signature-box:hover {
     color: #00ff88;
     text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
 }
 
-/* Alternância de visibilidade padrão (Modo PC) */
-.dev-signature-box .icon-mobile,
+.dev-signature-box:hover .fingerprint-icon {
+    color: #00ff88;
+    filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
+}
+
+/* Gerenciamento de texto padrão (Modo PC) */
 .dev-signature-box .text-mobile {
-    display: none; /* Oculta a digital e o texto do celular no desktop */
-}
-
-.dev-signature-box .icon-pc,
-.dev-signature-box .text-pc {
-    display: inline-block; /* Mantém o planeta e o Nexus System visíveis */
+    display: none; /* Esconde o texto do celular no PC */
 }
 
 .dev-signature-box .text-pc {
+    display: inline-block;
     font-size: 16px;
 }
 
@@ -197,7 +202,7 @@ body {
     font-weight: bold;
 }
 
-/* PAINEL (CONTEÚDO DO CONTAINER ORIGINAL) */
+/* PAINEL FINANCEIRO */
 .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -338,7 +343,7 @@ tbody tr:hover {
     font-weight: bold;
 }
 
-/* RESPONSIVO */
+/* RESPONSIVO (MOBILE) */
 @media (max-width: 768px) {
     .header {
         align-items: center;
@@ -359,16 +364,15 @@ tbody tr:hover {
         justify-content: space-between;
     }
 
-    /* COMPORTAMENTO EXCLUSIVO DA BIOMETRIA EM SMARTPHONES */
+    /* ESTILO DO BOTÃO DE BIOMETRIA NO CELULAR */
     .dev-signature-box {
-        border: 1px solid #1f2a3a !important; /* Cria a borda do botão no celular */
+        border: 1px solid #1f2a3a !important; /* Borda do botão de volta no celular */
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.02) !important; /* Fundo sutil */
-        cursor: pointer; /* Cursor de clique liberado no celular */
-        color: #8892b0;
+        cursor: pointer;
     }
     
-    /* Hover e Toque Dinâmico com Brilho Verde-Neon no Celular */
+    /* Efeito ao Clicar / Tocar no Celular */
     .dev-signature-box:hover,
     .dev-signature-box:active {
         border-color: #00ff88 !important;
@@ -376,20 +380,22 @@ tbody tr:hover {
         text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
     }
 
-    /* Inversão dos elementos no Mobile */
-    .dev-signature-box .icon-pc,
+    /* Garante que o ícone mude de cor no toque mobile */
+    .dev-signature-box:hover .fingerprint-icon,
+    .dev-signature-box:active .fingerprint-icon {
+        color: #00ff88 !important;
+        filter: drop-shadow(0 0 4px rgba(0, 255, 136, 0.5));
+    }
+
+    /* Alternância de textos no Mobile */
     .dev-signature-box .text-pc {
-        display: none; /* Esconde o planeta e o "Nexus System" */
-    }
-
-    .dev-signature-box .icon-mobile,
-    .dev-signature-box .text-mobile {
-        display: inline-block; /* Exibe a digital e o texto sutil */
+        display: none; /* Esconde "Nexus System" */
     }
 
     .dev-signature-box .text-mobile {
-        font-size: 13px; /* Tamanho menor para "acesso biométrico" */
+        display: inline-block; /* Exibe "acesso biométrico" */
+        font-size: 13px;
         font-weight: 500;
-        text-transform: lowercase; /* Força letras minúsculas conforme pedido */
+        text-transform: lowercase;
     }
 }
